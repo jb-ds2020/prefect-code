@@ -93,15 +93,12 @@ def write_bq(df: pd.DataFrame) -> None:
 
 
 ### Subflows here
-@flow(log_prints=True)
+@flow()
 def etl_web_to_gcs(year: int, month: int, color: str) -> None:
     """gets the data from web and stores it into gcs"""
 
     dataset_file = f"{color}_tripdata_{year}-{month:02}"
     dataset_url = f"https://github.com/DataTalksClub/nyc-tlc-data/releases/download/{color}/{dataset_file}.csv.gz"
-
-    print(f"Name of the file: {dataset_file}")
-    print(f"URL of the file: {dataset_url}")
 
     df = fetch(dataset_url)
     clean_df = clean(df)
