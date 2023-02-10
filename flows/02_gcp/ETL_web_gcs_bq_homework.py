@@ -55,7 +55,8 @@ def write_local(df: pd.DataFrame, color: str, dataset_file: str) -> Path:
 def write_gcs(path: Path) -> None:
     """Uploading local parquet file to google cloud storage"""
     gcs_block = GcsBucket.load("zoom-gcs")
-    gcs_block.upload_from_path(from_path=f"{path}", to_path=path)
+    gcs_block.upload_from_path(from_path=f"{path}", to_path=path, upload_kwargs = {
+      "timeout": 300})
 
     return
 
