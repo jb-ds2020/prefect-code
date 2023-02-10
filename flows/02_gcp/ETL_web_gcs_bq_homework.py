@@ -79,12 +79,14 @@ def read_df(path: Path) -> pd.DataFrame:
 
 
 @task()
-def write_bq(df: pd.DataFrame) -> None:
+def write_bq(df: pd.DataFrame, color: str) -> None:
     """Write DataFrame to BigQuery"""
     gcp_credentials_block = GcpCredentials.load("zoom-gcp-dreds")
-
+    
+    table_name = f"dezoomcamp.{color}_rides"
+    
     df.to_gbq(
-        destination_table="dezoomcamp.rides",
+        destination_table=table_name,
         project_id="ringed-enigma-376110",
         credentials=gcp_credentials_block.get_credentials_from_service_account(),
         chunksize=500_000,
@@ -115,7 +117,7 @@ def etl_gcs_to_bq(year: int, month: int, color: str):
     """main ETL flow to load data into Biq Query"""
     path = extract_from_gcs(color, year, month)
     df = read_df(path)
-    write_bq(df)
+    write_bq(df, color)
     return len(df)
 
 
